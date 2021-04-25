@@ -1,17 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { Route } from 'react-router-dom'
+import Customers from '../Pages/Customers'
+import Home from '../Pages/Home'
 
-function Content() {
-    return ( 
-        <div>
-            <Link to={{
-                pathname:"/about",
-                data:{
-                    "name":"Chetan"
-                }
-                }}>About</Link>
-        </div>
+function content() {
+    return (
+        <React.Fragment>
+            
+            
+        </React.Fragment>
     )
 }
 
-export default Content;
+export default content
