@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1,
+    },
     menuButton: {
         marginRight: theme.spacing(2),
     },
@@ -51,7 +54,7 @@ function Header() {
 
     return (
         <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon />
@@ -83,13 +86,13 @@ function Header() {
                                     horizontal: 'right',
                                 }}
                                 open={open}
-                                onClose={()=>{
+                                onClose={handleClose}
+                            >
+                                {/* <MenuItem onClick={() => {
                                     handleClose();
                                     history.push("/my-account");
-                                }}
-                            >
-                                <MenuItem onClick={handleClose}>My Account</MenuItem>
-                                <MenuItem onClick={()=>{
+                                }}>My Account</MenuItem> */}
+                                <MenuItem onClick={() => {
                                     handleClose();
                                     logout();
                                 }}>Logout</MenuItem>

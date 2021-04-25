@@ -6,6 +6,7 @@ import Content from './components/Content';
 import Register from './Pages/Register';
 import Header from './components/Header';
 import Customers from './Pages/Customers';
+import MyAccount from './Pages/MyAccount';
 
 
 
@@ -16,6 +17,7 @@ function App() {
       <Route path="/login" exact component={Login} />
       <Route path="/register" exact component={Register} />
       <Route path="/customers" component={Customers} />
+      <Route path="/my-account" component={MyAccount} />
     </Router>
   )
 }

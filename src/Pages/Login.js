@@ -1,5 +1,6 @@
 import { CircularProgress, Container, FormControl, Grid, InputAdornment, Card } from '@material-ui/core'
 import React, { useState,useEffect } from 'react'
+import { baseAPIUrl } from '../config/endpoints';
 import Controls from '../components/Controls'
 import { AccountCircle, Lock } from '@material-ui/icons'
 import useForm from '../components/useForm'
@@ -38,7 +39,7 @@ function Login() {
         e.preventDefault()
         if (validate()) {
             setisLoading(true)
-            axios.post("https://itzarhje7c.execute-api.ap-south-1.amazonaws.com/v1/login", { "username": values.username, "password": values.password }).then((response) => {
+            axios.post(baseAPIUrl+"login", { "username": values.username, "password": values.password }).then((response) => {
                 setisLoading(false)
                 if (response.status === 200 && response.data.success && response.data.RESPONSE.isLoggedIn) {
                     // Notification(response.data.RESPONSE.message, "success");
@@ -128,6 +129,15 @@ function Login() {
                                         fullWidth
                                         disabled={isLoading ? true : false}
                                         type="submit"
+                                    />
+                                    <Controls.Button
+                                        text="New User? Register here"
+                                        style={{ borderRadius: '30px', padding: '12px 22px' }}
+                                        fullWidth
+                                        variant="text"
+                                        onClick={()=>{
+                                            history.push("/register");
+                                        }}
                                     />
                                 </div>
                             </form>
