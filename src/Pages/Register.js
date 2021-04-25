@@ -77,94 +77,104 @@ function Register() {
         return <Redirect to="/" />
     }
     return (
-        <React.Fragment>
-            <Container>
-                <div className="mb-4">
-                    <h1 className="mb-0">Register</h1>
-                    <div className="mb-2" style={{ borderBottom: '2px solid rgb(63 81 181)', width: '50px' }}></div>
-                    <p>Please enter details below to create account!</p>
-                </div>
-                <div className="mt-5">
-                    <form onSubmit={register} autoComplete="off" noValidate>
-                        <Controls.TextField
-                            label="FullName"
-                            placeholder="Enter full name"
-                            fullWidth
-                            name="fullName"
-                            value={values.fullName}
-                            onChange={handleInputChange}
-                            error={errors.fullName}
-                            // inputRef={input => input && input.focus()}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Person />
-                                    </InputAdornment>
-                                )
-                            }}
-                            disabled={isLoading ? true : false}
-                        />
-                        <Controls.TextField
-                            label="Username"
-                            placeholder="Enter username"
-                            fullWidth
-                            name="username"
-                            value={values.username}
-                            onChange={handleInputChange}
-                            error={errors.username}
-                            // inputRef={input => input && input.focus()}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <AccountCircle />
-                                    </InputAdornment>
-                                )
-                            }}
-                            disabled={isLoading ? true : false}
-                        />
+            <React.Fragment>
+                <Grid container justify="center"
+                    alignItems="center">
+                    <Grid container md={4}>
+                        <Container>
+                            <div className="mb-4">
+                                <h1 className="mb-0">Register</h1>
+                                <div className="mb-2" style={{ borderBottom: '2px solid rgb(63 81 181)', width: '50px' }}></div>
+                                <p>Please enter details below to create account!</p>
+                            </div>
+                            <div className="mt-5">
+                                <form onSubmit={register} autoComplete="off" noValidate>
+                                    <Controls.TextField
+                                        label="FullName"
+                                        placeholder="Enter full name"
+                                        fullWidth
+                                        name="fullName"
+                                        value={values.fullName}
+                                        onChange={handleInputChange}
+                                        error={errors.fullName}
+                                        // inputRef={input => input && input.focus()}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <Person />
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        disabled={isLoading ? true : false}
+                                    />
+                                    <Controls.TextField
+                                        label="Username"
+                                        placeholder="Enter username"
+                                        fullWidth
+                                        name="username"
+                                        value={values.username}
+                                        onChange={handleInputChange}
+                                        error={errors.username}
+                                        // inputRef={input => input && input.focus()}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <AccountCircle />
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        disabled={isLoading ? true : false}
+                                    />
 
-                        <Controls.TextField
-                            type="password"
-                            label="Password"
-                            placeholder="Enter password"
-                            fullWidth
-                            name="password"
-                            value={values.password}
-                            onChange={handleInputChange}
-                            error={errors.password}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Lock />
-                                    </InputAdornment>
-                                )
-                            }}
-                            disabled={isLoading ? true : false}
-                        />
+                                    <Controls.TextField
+                                        type="password"
+                                        label="Password"
+                                        placeholder="Enter password"
+                                        fullWidth
+                                        name="password"
+                                        value={values.password}
+                                        onChange={handleInputChange}
+                                        error={errors.password}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <Lock />
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        disabled={isLoading ? true : false}
+                                    />
 
-                        <div className="mt-3">
-                            <Controls.Button
-                                text={isLoading ? (<CircularProgress size={30} color="secondary" thickness="5.0" />) : "CONTINUE"}
-                                style={{ borderRadius: '30px', padding: '12px 22px' }}
-                                fullWidth
-                                disabled={isLoading ? true : false}
-                                type="submit"
-                                color="secondary"
-                            />
-                            <Controls.Button
-                                text="Already have account? Login"
-                                style={{ borderRadius: '30px', padding: '12px 22px' }}
-                                fullWidth
-                                variant="text"
-                                onClick={() => {
-                                    history.push("/login");
-                                }}
-                            />
-                        </div>
-                    </form>
-                </div>
-            </Container>
-        </React.Fragment>
+                                    <div className="mt-3">
+                                        <Controls.Button
+                                            text={isLoading ? (<CircularProgress size={30} color="secondary" thickness="5.0" />) : "CONTINUE"}
+                                            style={{ borderRadius: '30px', padding: '12px 22px' }}
+                                            fullWidth
+                                            disabled={isLoading ? true : false}
+                                            type="submit"
+                                            color="secondary"
+                                        />
+                                        <Controls.Button
+                                            text="Already have account? Login"
+                                            style={{ borderRadius: '30px', padding: '12px 22px' }}
+                                            fullWidth
+                                            variant="text"
+                                            onClick={() => {
+                                                history.push("/login");
+                                            }}
+                                        />
+                                    </div>
+                                </form>
+                            </div>
+                        </Container>
+                    </Grid>
+
+                    <Grid container md={8} justify="center"
+                        alignItems="center">
+                        <img src="https://farmsoc.com/wp-content/uploads/2020/04/mobile-login-concept-illustration_114360-135.jpg" className="img-fluid" alt="" />
+                    </Grid>
+                </Grid>
+            </React.Fragment>
     )
 }
 
