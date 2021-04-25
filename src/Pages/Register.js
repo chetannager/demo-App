@@ -81,6 +81,7 @@ function Register() {
                 <Grid container justify="center"
                     alignItems="center">
                     <Grid container md={4}>
+                        <Card>
                         <Container>
                             <div className="mb-4">
                                 <h1 className="mb-0">Register</h1>
@@ -167,6 +168,7 @@ function Register() {
                                 </form>
                             </div>
                         </Container>
+                        </Card>
                     </Grid>
 
                     <Grid container md={8} justify="center"
