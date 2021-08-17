@@ -1,9 +1,6 @@
-import { Breadcrumbs, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, useHistory, Redirect } from 'react-router-dom'
 import Header from '../components/Header';
-import { Link } from 'react-router-dom'
-import Sidebar from '../components/Sidebar';
 import { isJwtExpired } from 'jwt-check-expiration';
 
 const getJWTToken = () => {
