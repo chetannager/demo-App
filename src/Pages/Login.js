@@ -5,9 +5,10 @@ import Controls from '../components/Controls'
 import { AccountCircle, Lock } from '@material-ui/icons'
 import useForm from '../components/useForm'
 import axios from 'axios'
-import { Notification } from '../components/ui/Noty'
 import { BrowserRouter as Router, useHistory, Redirect } from 'react-router-dom'
 import { isJwtExpired } from 'jwt-check-expiration';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const initialState = {
     username: '',
@@ -38,27 +39,61 @@ function Login() {
     const authentication = (e) => {
         e.preventDefault()
         if (validate()) {
-            setisLoading(true)
-            axios.post(baseAPIUrl + "login", { "emailAddress": values.username, "password": values.password }).then((response) => {
-                setisLoading(false)
-                if (response.status === 200) {
-                    if (response.data.RESPONSE.loggedInOperation && response.data.RESPONSE.isLoggedIn) {
-                        localStorage.setItem("JWT_TOKEN", response.data.RESPONSE.token);
-                        history.push("/");
-                    } else if (!response.data.RESPONSE.loggedInOperation && !response.data.RESPONSE.isLoggedIn) {
-                        Notification(response.data.RESPONSE.error_message, "error");
+            if (navigator.onLine) {
+                setisLoading(true)
+                axios.post(baseAPIUrl + "login", { "emailAddress": values.username, "password": values.password }).then((response) => {
+                    setisLoading(false)
+                    if (response.status === 200) {
+                        if (response.data.RESPONSE.loggedInOperation && response.data.RESPONSE.isLoggedIn) {
+                            localStorage.setItem("JWT_TOKEN", response.data.RESPONSE.token);
+                            history.push("/");
+                        } else if (!response.data.RESPONSE.loggedInOperation && !response.data.RESPONSE.isLoggedIn) {
+                            toast.error(response.data.RESPONSE.error_message, {
+                                position: "top-right",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: false,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        }
+                    } else {
+                        toast.error("something went wrong, please try again!", {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: true,
+                            progress: undefined,
+                        });
                     }
-                } else {
-                    Notification("something went wrong, please try again!", "error");
-                }
-            }).catch(error => {
-                setisLoading(false)
-                if (error.response.status === 400) {
-                    Notification(error.response.data.RESPONSE.error_message, "error");
-                } else {
-                    Notification("something went wrong, please try again!", "error");
-                }
-            })
+                }).catch(error => {
+                    setisLoading(false)
+                    if (error.response.status === 400) {
+                        toast.error("something went wrong, please try again!", {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: true,
+                            progress: undefined,
+                        });
+                    }
+                })
+            } else {
+                toast.error("You are Offline! 🌐", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
         }
     }
 
@@ -160,6 +195,17 @@ function Login() {
                     </Grid>
                 </Grid>
             </Card>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover={false}
+            />
         </React.Fragment>
     )
 }

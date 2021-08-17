@@ -2,17 +2,20 @@ import { CircularProgress, Container, FormControl, Grid, InputAdornment, Card, H
 import React, { useState, useEffect } from 'react'
 import { baseAPIUrl } from '../config/endpoints';
 import Controls from '../components/Controls'
-import { AccountCircle, Lock, Person } from '@material-ui/icons'
+import { AccountCircle, Lock, Person, MonetizationOn } from '@material-ui/icons'
 import useForm from '../components/useForm'
 import axios from 'axios'
 import { Notification } from '../components/ui/Noty'
 import { BrowserRouter as Router, useHistory, Redirect } from 'react-router-dom'
 import { isJwtExpired } from 'jwt-check-expiration';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const initialState = {
     fullName: '',
     username: '',
-    password: ''
+    password: '',
+    score: '',
 }
 
 const getJWTToken = () => {
@@ -29,9 +32,12 @@ function Register() {
         if ('fullName' in fieldValues)
             temp.fullName = (/(.|\s)*\S(.|\s)*/).test(fieldValues.fullName) ? "" : "Please enter a FullName!"
         if ('username' in fieldValues)
-            temp.username = (/(.|\s)*\S(.|\s)*/).test(fieldValues.username) ? "" : "Please enter a Username!"
+            temp.username = (/^([A-Za-z0-9\+_\-]+)(\.[A-Za-z0-9\+_\-]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}$/).test(fieldValues.username) ? "" : "Please enter a email!"
         if ('password' in fieldValues)
             temp.password = (/(.|\s)*\S(.|\s)*/).test(fieldValues.password) ? "" : "Please enter a Password!"
+        if ('score' in fieldValues)
+            temp.score = (/(.|\s)*\S(.|\s)*/).test(fieldValues.score) ? "" : "Please enter a Score!"
+
         setErrors({
             ...temp
         })
@@ -46,19 +52,54 @@ function Register() {
         e.preventDefault()
         if (validate()) {
             setisLoading(true)
-            axios.post(baseAPIUrl + "register", { "fullName": values.fullName, "username": values.username, "password": values.password }).then((response) => {
+            axios.post(baseAPIUrl + "register", { "profileImage": "", "fullName": values.fullName, "emailAddress": values.username, "password": values.password, "score": values.score }).then((response) => {
                 setisLoading(false)
-                if (response.status === 200 && response.data.success && response.data.RESPONSE.registerOperation) {
-                    Notification(response.data.RESPONSE.message, "success");
-                    history.push("/");
-
+                if (response.status === 200) {
+                    if (response.data.RESPONSE.isVerified) {
+                        toast.error(response.data.RESPONSE.message, {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: true,
+                            progress: undefined,
+                        });
+                    } else if (response.data.RESPONSE.registerOperation) {
+                        toast.success(response.data.RESPONSE.message, {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: true,
+                            progress: undefined,
+                        });
+                        resetForm({});
+                    } else {
+                        toast.error(response.data.RESPONSE.error_message, {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: true,
+                            progress: undefined,
+                        });
+                    }
                 }
             }).catch(error => {
                 setisLoading(false)
-                if (error.response.status === 400 && !error.response.data.status) {
-                    Notification(error.response.data.RESPONSE.error_message, "error");
-                } else {
-                    Notification("something went wrong, please try again!", "error");
+                if (error.response.status === 400) {
+                    toast.error("something went wrong, please try again!", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: true,
+                        progress: undefined,
+                    });
                 }
             })
         }
@@ -148,6 +189,25 @@ function Register() {
                                         disabled={isLoading ? true : false}
                                     />
 
+                                    <Controls.TextField
+                                        label="Score"
+                                        placeholder="Enter score"
+                                        fullWidth
+                                        name="score"
+                                        value={values.score}
+                                        onChange={handleInputChange}
+                                        error={errors.score}
+                                        // inputRef={input => input && input.focus()}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <MonetizationOn />
+                                                </InputAdornment>
+                                            )
+                                        }}
+                                        disabled={isLoading ? true : false}
+                                    />
+
                                     <div className="mt-3">
                                         <Controls.Button
                                             text={isLoading ? (<CircularProgress size={30} color="secondary" thickness="5.0" />) : "CONTINUE"}
@@ -180,6 +240,17 @@ function Register() {
                     </Grid>
                 </Hidden>
             </Grid>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss={false}
+                draggable
+                pauseOnHover={false}
+            />
         </React.Fragment>
     )
 }
