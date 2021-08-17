@@ -1,4 +1,4 @@
-import { CircularProgress, Container, FormControl, Grid, InputAdornment, Card } from '@material-ui/core'
+import { CircularProgress, Container, FormControl, Grid, InputAdornment, Card, Hidden } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import { baseAPIUrl } from '../config/endpoints';
 import Controls from '../components/Controls'
@@ -7,7 +7,7 @@ import useForm from '../components/useForm'
 import axios from 'axios'
 import { Notification } from '../components/ui/Noty'
 import { BrowserRouter as Router, useHistory, Redirect } from 'react-router-dom'
-
+import { isJwtExpired } from 'jwt-check-expiration';
 
 const initialState = {
     fullName: '',
@@ -67,21 +67,23 @@ function Register() {
 
     useEffect(() => {
         if (JWT_TOKEN == null) {
-            setisLoggedIn(false)
+            setisLoggedIn(false);
         } else {
-            setisLoggedIn(true)
+            if (isJwtExpired(JWT_TOKEN)) {
+                setisLoggedIn(false);
+            } else {
+                setisLoggedIn(true);
+                history.push("/");
+            }
         }
     }, [])
 
-    if (isLoggedIn === true) {
-        return <Redirect to="/" />
-    }
     return (
-            <React.Fragment>
-                <Grid container justify="center"
-                    alignItems="center">
-                    <Grid container md={4}>
-                        <Card>
+        <React.Fragment>
+            <Grid container justify="center"
+                alignItems="center">
+                <Grid container md={4}>
+                    <Card>
                         <Container>
                             <div className="mb-4">
                                 <h1 className="mb-0">Register</h1>
@@ -109,8 +111,8 @@ function Register() {
                                         disabled={isLoading ? true : false}
                                     />
                                     <Controls.TextField
-                                        label="Username"
-                                        placeholder="Enter username"
+                                        label="Email Address"
+                                        placeholder="Enter email address"
                                         fullWidth
                                         name="username"
                                         value={values.username}
@@ -168,15 +170,17 @@ function Register() {
                                 </form>
                             </div>
                         </Container>
-                        </Card>
-                    </Grid>
+                    </Card>
+                </Grid>
 
+                <Hidden only={['sm', 'xs']}>
                     <Grid container md={8} justify="center"
                         alignItems="center">
                         <img src="https://farmsoc.com/wp-content/uploads/2020/04/mobile-login-concept-illustration_114360-135.jpg" className="img-fluid" alt="" />
                     </Grid>
-                </Grid>
-            </React.Fragment>
+                </Hidden>
+            </Grid>
+        </React.Fragment>
     )
 }
 

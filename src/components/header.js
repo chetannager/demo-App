@@ -56,12 +56,9 @@ function Header() {
         <div className={classes.root}>
             <AppBar position="fixed" className={classes.appBar}>
                 <Toolbar>
-                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        DemoApp Dashboard
-          </Typography>
+                        My Profile
+                    </Typography>
                     {auth && (
                         <div>
                             <IconButton

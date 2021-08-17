@@ -1,4 +1,4 @@
-import { CircularProgress, Container, FormControl, Grid, InputAdornment, Card } from '@material-ui/core'
+import { CircularProgress, Container, FormControl, Grid, InputAdornment, Card, Hidden } from '@material-ui/core'
 import React, { useState, useEffect } from 'react'
 import { baseAPIUrl } from '../config/endpoints';
 import Controls from '../components/Controls'
@@ -42,13 +42,13 @@ function Login() {
             axios.post(baseAPIUrl + "login", { "emailAddress": values.username, "password": values.password }).then((response) => {
                 setisLoading(false)
                 if (response.status === 200) {
-                    if(response.data.RESPONSE.loggedInOperation && response.data.RESPONSE.isLoggedIn){
+                    if (response.data.RESPONSE.loggedInOperation && response.data.RESPONSE.isLoggedIn) {
                         localStorage.setItem("JWT_TOKEN", response.data.RESPONSE.token);
                         history.push("/");
-                    }else if(!response.data.RESPONSE.loggedInOperation && !response.data.RESPONSE.isLoggedIn){
+                    } else if (!response.data.RESPONSE.loggedInOperation && !response.data.RESPONSE.isLoggedIn) {
                         Notification(response.data.RESPONSE.error_message, "error");
                     }
-                }else {
+                } else {
                     Notification("something went wrong, please try again!", "error");
                 }
             }).catch(error => {
@@ -81,79 +81,81 @@ function Login() {
                 <Grid style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} container justify="center"
                     alignItems="center">
 
-                    <Grid container md={7} justify="center"
-                        alignItems="center">
-                        <img src="https://dokkanonline.ir/wp-content/uploads/signup.jpg" className="img-fluid" alt="" />
-                    </Grid>
+                    <Hidden only={['sm', 'xs']}>
+                        <Grid container md={7} justify="center"
+                            alignItems="center">
+                            <img src="https://dokkanonline.ir/wp-content/uploads/signup.jpg" className="img-fluid" alt="" />
+                        </Grid>
+                    </Hidden>
 
                     <Grid container md={5}>
                         <Card>
-                        <Container style={{ paddingRight: '100px' }}>
-                            <div className="mb-4">
-                                <h1 className="mb-0">Welcome User!</h1>
-                                <div className="mb-2" style={{ borderBottom: '2px solid rgb(63 81 181)', width: '50px' }}></div>
-                                <p>Please enter email &amp; password to verify your account!</p>
-                            </div>
-                            <div className="mt-5">
-                                <form onSubmit={authentication} autoComplete="off" noValidate>
-                                    <Controls.TextField
-                                        label="Email Address"
-                                        placeholder="Enter email"
-                                        fullWidth
-                                        name="username"
-                                        value={values.username}
-                                        onChange={handleInputChange}
-                                        error={errors.username}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <AccountCircle />
-                                                </InputAdornment>
-                                            )
-                                        }}
-                                        disabled={isLoading ? true : false}
-                                    />
-
-                                    <Controls.TextField
-                                        type="password"
-                                        label="Password"
-                                        placeholder="Enter password"
-                                        fullWidth
-                                        name="password"
-                                        value={values.password}
-                                        onChange={handleInputChange}
-                                        error={errors.password}
-                                        InputProps={{
-                                            startAdornment: (
-                                                <InputAdornment position="start">
-                                                    <Lock />
-                                                </InputAdornment>
-                                            )
-                                        }}
-                                        disabled={isLoading ? true : false}
-                                    />
-
-                                    <div className="mt-3">
-                                        <Controls.Button
-                                            text={isLoading ? (<CircularProgress size={30} color="secondary" thickness="5.0" />) : "CONTINUE"}
-                                            style={{ borderRadius: '30px', padding: '12px 22px' }}
+                            <Container style={{ paddingRight: '100px' }}>
+                                <div className="mb-4">
+                                    <h1 className="mb-0">Welcome User!</h1>
+                                    <div className="mb-2" style={{ borderBottom: '2px solid rgb(63 81 181)', width: '50px' }}></div>
+                                    <p>Please enter email &amp; password to verify your account!</p>
+                                </div>
+                                <div className="mt-5">
+                                    <form onSubmit={authentication} autoComplete="off" noValidate>
+                                        <Controls.TextField
+                                            label="Email Address"
+                                            placeholder="Enter email"
                                             fullWidth
-                                            disabled={isLoading ? true : false}
-                                            type="submit"
-                                        />
-                                        <Controls.Button
-                                            text="New User? Register here"
-                                            style={{ borderRadius: '30px', padding: '12px 22px' }}
-                                            fullWidth
-                                            variant="text"
-                                            onClick={() => {
-                                                history.push("/register");
+                                            name="username"
+                                            value={values.username}
+                                            onChange={handleInputChange}
+                                            error={errors.username}
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <AccountCircle />
+                                                    </InputAdornment>
+                                                )
                                             }}
+                                            disabled={isLoading ? true : false}
                                         />
-                                    </div>
-                                </form>
-                            </div>
-                        </Container>
+
+                                        <Controls.TextField
+                                            type="password"
+                                            label="Password"
+                                            placeholder="Enter password"
+                                            fullWidth
+                                            name="password"
+                                            value={values.password}
+                                            onChange={handleInputChange}
+                                            error={errors.password}
+                                            InputProps={{
+                                                startAdornment: (
+                                                    <InputAdornment position="start">
+                                                        <Lock />
+                                                    </InputAdornment>
+                                                )
+                                            }}
+                                            disabled={isLoading ? true : false}
+                                        />
+
+                                        <div className="mt-3">
+                                            <Controls.Button
+                                                text={isLoading ? (<CircularProgress size={30} color="secondary" thickness="5.0" />) : "CONTINUE"}
+                                                style={{ borderRadius: '30px', padding: '12px 22px' }}
+                                                fullWidth
+                                                disabled={isLoading ? true : false}
+                                                type="submit"
+                                            />
+                                            <Controls.Button
+                                                text="New User? Register here"
+                                                style={{ borderRadius: '30px', padding: '12px 22px' }}
+                                                fullWidth
+                                                variant="text"
+                                                onClick={() => {
+                                                    history.push("/register");
+                                                }}
+                                            />
+                                        </div>
+                                    </form>
+                                </div>
+                            </Container>
                         </Card>
                     </Grid>
                 </Grid>

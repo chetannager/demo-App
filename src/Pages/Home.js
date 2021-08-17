@@ -33,9 +33,7 @@ function Home() {
   return (
     <React.Fragment>
       <Header />
-      <Sidebar />
-      <h1>Hello World</h1>
-      <Link to="/customers">Customers</Link>
+      {/* <Sidebar /> */}
     </React.Fragment>
   )
 }
