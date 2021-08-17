@@ -7,7 +7,7 @@ import useForm from '../components/useForm'
 import axios from 'axios'
 import { Notification } from '../components/ui/Noty'
 import { BrowserRouter as Router, useHistory, Redirect } from 'react-router-dom'
-
+import { isJwtExpired } from 'jwt-check-expiration';
 
 const initialState = {
     username: '',
@@ -22,7 +22,7 @@ function Login() {
     const validate = (fieldValues = values) => {
         let temp = { ...errors }
         if ('username' in fieldValues)
-            temp.username = (/(.|\s)*\S(.|\s)*/).test(fieldValues.username) ? "" : "Please enter a Username!"
+            temp.username = (/^([A-Za-z0-9\+_\-]+)(\.[A-Za-z0-9\+_\-]+)*@([A-Za-z0-9\-]+\.)+[A-Za-z]{2,6}$/).test(fieldValues.username) ? "" : "Please enter a email Address!"
         if ('password' in fieldValues)
             temp.password = (/(.|\s)*\S(.|\s)*/).test(fieldValues.password) ? "" : "Please enter a Password!"
         setErrors({
@@ -39,17 +39,21 @@ function Login() {
         e.preventDefault()
         if (validate()) {
             setisLoading(true)
-            axios.post(baseAPIUrl + "login", { "username": values.username, "password": values.password }).then((response) => {
+            axios.post(baseAPIUrl + "login", { "emailAddress": values.username, "password": values.password }).then((response) => {
                 setisLoading(false)
-                if (response.status === 200 && response.data.success && response.data.RESPONSE.isLoggedIn) {
-                    // Notification(response.data.RESPONSE.message, "success");
-                    localStorage.setItem("JWT_TOKEN", response.data.RESPONSE.token);
-                    history.push("/");
-
+                if (response.status === 200) {
+                    if(response.data.RESPONSE.loggedInOperation && response.data.RESPONSE.isLoggedIn){
+                        localStorage.setItem("JWT_TOKEN", response.data.RESPONSE.token);
+                        history.push("/");
+                    }else if(!response.data.RESPONSE.loggedInOperation && !response.data.RESPONSE.isLoggedIn){
+                        Notification(response.data.RESPONSE.error_message, "error");
+                    }
+                }else {
+                    Notification("something went wrong, please try again!", "error");
                 }
             }).catch(error => {
                 setisLoading(false)
-                if (error.response.status === 400 && !error.response.data.status) {
+                if (error.response.status === 400) {
                     Notification(error.response.data.RESPONSE.error_message, "error");
                 } else {
                     Notification("something went wrong, please try again!", "error");
@@ -60,9 +64,14 @@ function Login() {
 
     useEffect(() => {
         if (JWT_TOKEN == null) {
-            setisLoggedIn(false)
+            setisLoggedIn(false);
         } else {
-            history.push("/");
+            if (isJwtExpired(JWT_TOKEN)) {
+                setisLoggedIn(false);
+            } else {
+                setisLoggedIn(true);
+                history.push("/");
+            }
         }
     }, [])
 
@@ -81,21 +90,20 @@ function Login() {
                         <Card>
                         <Container style={{ paddingRight: '100px' }}>
                             <div className="mb-4">
-                                <h1 className="mb-0">Welcome Admin!</h1>
+                                <h1 className="mb-0">Welcome User!</h1>
                                 <div className="mb-2" style={{ borderBottom: '2px solid rgb(63 81 181)', width: '50px' }}></div>
-                                <p>Please enter username &amp; password to verify your account!</p>
+                                <p>Please enter email &amp; password to verify your account!</p>
                             </div>
                             <div className="mt-5">
                                 <form onSubmit={authentication} autoComplete="off" noValidate>
                                     <Controls.TextField
-                                        label="Username"
-                                        placeholder="Enter username"
+                                        label="Email Address"
+                                        placeholder="Enter email"
                                         fullWidth
                                         name="username"
                                         value={values.username}
                                         onChange={handleInputChange}
                                         error={errors.username}
-                                        // inputRef={input => input && input.focus()}
                                         InputProps={{
                                             startAdornment: (
                                                 <InputAdornment position="start">

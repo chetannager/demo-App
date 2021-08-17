@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, useHistory, Redirect } from 'react-rout
 import Header from '../components/Header';
 import { Link } from 'react-router-dom'
 import Sidebar from '../components/Sidebar';
+import { isJwtExpired } from 'jwt-check-expiration';
 
 const getJWTToken = () => {
   return localStorage.getItem("JWT_TOKEN");
@@ -17,6 +18,12 @@ function Home() {
   useEffect(() => {
     if (JWT_TOKEN == null) {
       setisLoggedIn(false)
+    } else {
+      if (isJwtExpired(JWT_TOKEN)) {
+        setisLoggedIn(false);
+      } else {
+        setisLoggedIn(true);
+      }
     }
   }, [])
 
