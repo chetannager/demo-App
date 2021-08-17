@@ -51,33 +51,48 @@ function Register() {
     const register = (e) => {
         e.preventDefault()
         if (validate()) {
-            setisLoading(true)
-            axios.post(baseAPIUrl + "register", { "profileImage": "", "fullName": values.fullName, "emailAddress": values.username, "password": values.password, "score": values.score }).then((response) => {
-                setisLoading(false)
-                if (response.status === 200) {
-                    if (response.data.RESPONSE.isVerified) {
-                        toast.error(response.data.RESPONSE.message, {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: false,
-                            draggable: true,
-                            progress: undefined,
-                        });
-                    } else if (response.data.RESPONSE.registerOperation) {
-                        toast.success(response.data.RESPONSE.message, {
-                            position: "top-right",
-                            autoClose: 3000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: false,
-                            draggable: true,
-                            progress: undefined,
-                        });
-                        resetForm({});
-                    } else {
-                        toast.error(response.data.RESPONSE.error_message, {
+            if (navigator.onLine) {
+                setisLoading(true)
+                axios.post(baseAPIUrl + "register", { "profileImage": "", "fullName": values.fullName, "emailAddress": values.username, "password": values.password, "score": values.score }).then((response) => {
+                    setisLoading(false)
+                    if (response.status === 200) {
+                        if (response.data.RESPONSE.isVerified) {
+                            toast.error(response.data.RESPONSE.message, {
+                                position: "top-right",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: false,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        } else if (response.data.RESPONSE.registerOperation) {
+                            toast.success(response.data.RESPONSE.message, {
+                                position: "top-right",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: false,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                            resetForm({});
+                        } else {
+                            toast.error(response.data.RESPONSE.error_message, {
+                                position: "top-right",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: false,
+                                draggable: true,
+                                progress: undefined,
+                            });
+                        }
+                    }
+                }).catch(error => {
+                    setisLoading(false)
+                    if (error.response.status === 400) {
+                        toast.error("something went wrong, please try again!", {
                             position: "top-right",
                             autoClose: 3000,
                             hideProgressBar: false,
@@ -87,21 +102,18 @@ function Register() {
                             progress: undefined,
                         });
                     }
-                }
-            }).catch(error => {
-                setisLoading(false)
-                if (error.response.status === 400) {
-                    toast.error("something went wrong, please try again!", {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: false,
-                        draggable: true,
-                        progress: undefined,
-                    });
-                }
-            })
+                })
+            } else {
+                toast.error("You are Offline! 🌐", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: false,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
         }
     }
 

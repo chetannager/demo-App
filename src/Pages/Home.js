@@ -47,7 +47,7 @@ function Home() {
       <table style={{ marginTop: '75px', width: '100%' }}>
         <tr>
           <th>Profile Image</th>
-          <td><img src={userDetails.userProfile} style={{ borderRadius: '50%', width: '50px', height: '50px' }} /></td>
+          <td><img src={"https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png"} style={{ borderRadius: '50%', width: '50px', height: '50px' }} /></td>
         </tr>
 
         <tr>
